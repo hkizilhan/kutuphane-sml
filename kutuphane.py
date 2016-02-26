@@ -12,6 +12,7 @@ users = (('hakan', 'hakan', 'Md. Yrd. Hakan'),
 DB_FILE = 'db.sqlite'
 CSV_FILE = 'db.csv'
 ADMIN = 'hakan'
+SECRET = 'secret key of hakan'
 
 def check_user(username, password):
     success = False
@@ -24,22 +25,22 @@ def check_user(username, password):
     return success  #False, no login
 
 def login_user(username, password):
-    response.set_cookie("logged_user", username)
+    response.set_cookie("logged_user", username, secret=SECRET)
     
 def logout_user():
     response.delete_cookie("logged_user")
     
 def get_user():
-    return request.get_cookie("logged_user", False)
+    return request.get_cookie("logged_user", False, secret=SECRET)
     
 def get_user_full_name():
-    username = request.get_cookie("logged_user", False)
+    username = request.get_cookie("logged_user", False, secret=SECRET)
     for user in users:
         if username == user[0]:
             return user[2]
 
 def is_admin():
-    return ADMIN == request.get_cookie("logged_user", False)
+    return ADMIN == request.get_cookie("logged_user", False, secret=SECRET)
     
 
 app = Bottle()
