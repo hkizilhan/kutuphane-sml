@@ -1,24 +1,14 @@
 % include('tpl/i_logged_user.tpl')
 
 
-% setdefault('text', 'No Text')
-<h1>{{get('title', 'No Title')}}</h1>
-<p> {{ text }} </p>
-% if defined('author'):
-  <p>By {{ author }}</p>
-% end
-
-
-<div>ANA SAYFA.... </div>
-
+<div></div>
+<br>
 <form action="/ogrenci" method="post" name="frm_ogrenci">
-<p>&Ouml;ğrenci Numarası Gir&nbsp;&nbsp;&nbsp;&nbsp; <input maxlength="5" name="ogr_no" size="5" type="text" /></p>
-
-<p><input name="submit" type="submit" value="Giriş" /></p>
+<p>&Ouml;ğrenci Numarası Girin&nbsp;&nbsp;&nbsp;&nbsp; <input maxlength="5" name="ogr_no" size="5" type="text" />
+&nbsp;&nbsp;&nbsp;&nbsp;
+<input name="submit" type="submit" value="Giriş" style="height:30px; width:50px"/></p>
 </form>
 
 
-
-<div></div>
 
 

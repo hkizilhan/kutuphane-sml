@@ -31,7 +31,7 @@
   <label class="col-md-4 control-label" for="singlebutton"></label>
   <div class="col-md-4">
     <br>
-    <button id="singlebutton" name="singlebutton" class="btn btn-default">Giriş</button>
+    <button style="height:30px; width:70px;">Giriş</button>
   </div>
 </div>
 </fieldset>
