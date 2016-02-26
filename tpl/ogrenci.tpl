@@ -29,7 +29,7 @@ function confirm_delete() {
 
 % if not has_book:
 
-<form action="/ogrenci/oduncver" method="post" name="frm_odunc_ver">
+<form action="/ogrenci/oduncver" method="post" name="frm_odunc_ver" enctype="multipart/form-data" accept-charset="UTF-8">
 
 <p>Kitap Adını Girin &nbsp;&nbsp;&nbsp;
 <input maxlength="150" name="kitap" size="30" type="text" /></p>
