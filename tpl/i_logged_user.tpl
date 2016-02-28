@@ -1,14 +1,28 @@
-Kullanıcı: <b>{{ get('user_full_name', 'USER_ERROR') }} </b>
-&nbsp;&nbsp;&nbsp;<a href="/logout">&Ccedil;ıkış</a>
-<hr />
+<link rel="stylesheet" href="static/bootstrap.min.css">
 
-%if is_admin:
-<div>
-<span>Admin: </span>
-<a href="/update_users">Kullanıcıları Güncelle</a>
-</div>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      
+      <span class="navbar-text">Kullanıcı: </span>
+      <span class="navbar-brand">{{ get('user_full_name', 'USER_ERROR') }} </span>
+      <span class="navbar-text"><a href="/logout">Çıkış</a></span>
+    
+    </div>
+    
+    %if is_admin:
 
-<hr />
-%end
+    <ul class="nav navbar-nav navbar-right"> 
+		<li><span class="navbar-brand">Yönetici İçin:</span></li>
+		<li><span class="navbar-text"><a href="/update_users">Kullanıcıları Güncelle</a></span></li>
+    </ul>
+    
+    %end
+
+  </div>
+</nav>
+
+
+
 
 

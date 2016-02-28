@@ -1,38 +1,54 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+   <meta charset="utf-8">
+   <link rel="stylesheet" href="/static/bootstrap.min.css">
+</head>
 
-<div>{{ msg1 }}</div>
-<div>{{ msg2 }}</div>
+<body>
+%if get('err_msg', '') != '':
+<div class="alert alert-danger" role="alert">{{err_msg}}</div>
+%end
+<div class="container">
 
-
-<form class="form-horizontal" action="/" method="post">
-<fieldset>
-<!-- Form Name -->
-<legend>Giriş</legend>
-
-<!-- Text input-->
-<div class="form-group">
-  <label class="col-md-4 control-label" for="textinput">Kullanıcı Adı</label>  
-  <div class="col-md-4">
-  <input id="textinput" name="username" placeholder="" class="form-control input-md" type="text">
+<div class="row">
+  <div class="col-md-6">
+  
+  <br><br><br>
+  
+  <legend>Giriş</legend>
+  
+  <form class="form-horizontal" action="/" method="post">
+  
+  <div class="form-group">
+    <label for="username" class="col-sm-4 control-label">Kullanıcı Adı</label>
+    <div class="col-sm-5">
+      <input name="username" type="text"  class="form-control" id="username">
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label for="password" class="col-sm-4 control-label">Şifre</label>
+    <div class="col-sm-5">
+      <input name="password" type="password" class="form-control" id="password">
+    </div>
+  </div>
+  
     
+  <div class="form-group">
+    <div class="col-sm-offset-4 col-sm-4">
+      <button type="submit" class="btn btn-primary">Giriş</button>
+    </div>
   </div>
-</div>
 
-<!-- Password input-->
-<div class="form-group">
-  <label class="col-md-4 control-label" for="passwordinput">Şifre</label>
-  <div class="col-md-4">
-    <input id="passwordinput" name="password" placeholder="" class="form-control input-md" type="password">
-    
-  </div>
-</div>
-
-<!-- Button -->
-<div class="form-group">
-  <label class="col-md-4 control-label" for="singlebutton"></label>
-  <div class="col-md-4">
-    <br>
-    <button style="height:30px; width:70px;">Giriş</button>
-  </div>
-</div>
-</fieldset>
 </form>
+  
+  
+    </div>
+  </div>
+
+</div>
+
+
+</body>
+</html>

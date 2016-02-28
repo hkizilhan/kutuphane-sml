@@ -1,6 +1,6 @@
-from bottle import Bottle, run, template, request, response, redirect
+from bottle import Bottle, run, template, request, response, redirect, static_file
 from datetime import datetime
-import sqlite3, csv, pprint
+import sqlite3, csv
 
 users = (('hakan', 'hakan', 'Md. Yrd. Hakan'),
          ('deneme1', 'deneme1', 'DENEME 1'),
@@ -14,6 +14,12 @@ CSV_FILE = 'db.csv'
 ADMIN = 'hakan'
 SECRET = 'secret key of hakan'
 
+ALERT_HTML = """<html lang="tr">
+              <head><link rel="stylesheet" href="/static/bootstrap.min.css"></head>
+              <body><div class="alert {}" role="alert">{}</div>
+              &nbsp;&nbsp;&nbsp;&nbsp;<a href="/" class="btn btn-primary"> < GERİ DÖN</a></body></html>"""
+
+
 def check_user(username, password):
     success = False
     
@@ -22,7 +28,7 @@ def check_user(username, password):
             success = True
             return success
     
-    return success  #False, no login
+    return success  #False, no login        
 
 def login_user(username, password):
     response.set_cookie("logged_user", username, secret=SECRET)
@@ -60,11 +66,8 @@ def index():
         login_user(username, password)
         redirect("/")
     else:
-        info = {'msg1': 'HATALI KULLANICI ADI VEYA ŞİFRE...',
-            'msg2': '',
-            'msg3': '' }
-    
-        return template('tpl/login.tpl', info)
+        err_msg = "HATALI KULLANICI ADI VEYA ŞİFRE!"
+        return template('tpl/login.tpl', err_msg=err_msg)
     
     return
 
@@ -73,11 +76,9 @@ def index():
 def index():
     
     if get_user() == False:
-        info = {'msg1': '', 'msg2': '', 'msg3': '' }
-        return template('tpl/login.tpl', info)
+        return template('tpl/login.tpl')
     else:
-        info = {'msg1': '', 'msg2': '', 'msg3': '' }
-        return template('tpl/main.tpl', user=get_user(), user_full_name=get_user_full_name(), is_admin=is_admin(), info=info)
+        return template('tpl/main.tpl', user=get_user(), user_full_name=get_user_full_name(), is_admin=is_admin())
 
 
 @app.post('/ogrenci')
@@ -90,14 +91,13 @@ def ogrenci():
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
     
-    #get student user name
+    # get student user name
     c.execute("select * from ogrenci where no=?", (ogrenci_no,) )
     cur_data = c.fetchone()
     
     # no student, stop
     if cur_data == None:
-        return """<span style="background-color: rgb(255, 0, 0); font-size:22px;">&Ouml;ĞRENCİ NUMARASI YANLIŞ!</span>
-                <br><br><br> <a href="/"> <<-- GERİ D&Ouml;N</a>"""
+        return ALERT_HTML.format("alert-danger", "ÖĞRENCİ NUMARASI YANLIŞ!")
                 
     # get student books
     c.execute("select * from odunc where no=? AND alan is NULL", (ogrenci_no,) )
@@ -127,9 +127,8 @@ def oduncver():
     c.execute("INSERT INTO odunc (no, sinif, adsoyad, veren, verme_tarihi, kitap) VALUES(?, ?, ?, ?, ?, ?)", (ogrenci_no, ogrenci_sinif, ogrenci_adsoyad, get_user_full_name(), datetime.now(), kitap) )
     conn.commit()
     
-    return """<span style="background-color: rgb(0, 255, 0); font-size:22px;">KAYIT BAŞARILI...</span>
-                <br><br><br> <a href="/"> <<-- GERİ D&Ouml;N</a>"""
-   
+    return ALERT_HTML.format("alert-success", "KİTAP ÖDÜNÇ VERİLDİ.")
+
 
 @app.post('/iade')
 def iade():
@@ -146,9 +145,8 @@ def iade():
     cur_data = c.fetchone()
     conn.commit()
 
-    return """<span style="background-color: rgb(0, 255, 0); font-size:22px;">İADE BAŞARILI...</span>
-                <br><br><br> <a href="/"> <<-- GERİ D&Ouml;N</a>"""
-
+    return ALERT_HTML.format("alert-success", "KİTAP İADE EDİLDİ.")
+    
 @app.get('/logout')
 def logout():
     logout_user()
@@ -166,9 +164,12 @@ def admin_update_users():
             c.execute("INSERT INTO ogrenci (no, sinif, adsoyad) VALUES (?,?,?)", (row[0], row[1] ,row[2])  )
     
     conn.commit()
-    return """<span style="background-color: rgb(0, 255, 0); font-size:22px;">KAYITLAR GÜNCELLENDİ...</span>
-                <br><br><br> <a href="/"> <<-- GERİ D&Ouml;N</a>"""
+    return ALERT_HTML.format("alert-success", "KAYITLAR GÜNCELLENDİ...")
+    
 
+@app.route('/static/<filename>')
+def server_static(filename):
+    return static_file(filename, root='./static')
 
 
 run(app, host='0.0.0.0', port=8080, reloader=True)
