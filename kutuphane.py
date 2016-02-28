@@ -172,6 +172,18 @@ def server_static(filename):
     return static_file(filename, root='./static')
 
 
+# Set db file if not exist
+try:
+    my_file = open(DB_FILE)
+    my_file.close()
+except IOError:
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+    c.execute('CREATE TABLE "ogrenci" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "no" INTEGER NOT NULL , "sinif" VARCHAR NOT NULL , "adsoyad" VARCHAR NOT NULL )')
+    c.execute('CREATE TABLE "odunc" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "no" INTEGER NOT NULL , "sinif" VARCHAR NOT NULL , "adsoyad" VARCHAR NOT NULL , "veren" VARCHAR NOT NULL , "verme_tarihi" DATETIME NOT NULL , "alan" VARCHAR, "alma_tarihi" DATETIME, "kitap" VARCHAR NOT NULL )')
+    conn.commit()
+    
+
 run(app, host='0.0.0.0', port=8080, reloader=True)
 
 
