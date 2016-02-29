@@ -14,7 +14,8 @@
 
     <ul class="nav navbar-nav navbar-right"> 
 		<li><span class="navbar-brand">Yönetici İçin:</span></li>
-		<li><span class="navbar-text"><a href="/update_users">Kullanıcıları Güncelle</a></span></li>
+		<li><span class="navbar-text"><a href="/odunctekiler">Ödünçteki Kitapları Listele</a></span></li>
+        <li><span class="navbar-text"><a href="/update_users">Kullanıcıları Güncelle</a></span></li>
     </ul>
     
     %end

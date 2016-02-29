@@ -105,8 +105,7 @@ def ogrenci():
     
     has_book = not (ogr_book == None)
 
-    info = {'msg1': '', 'msg2': '', 'msg3': '' }
-    return template('tpl/ogrenci.tpl', cur_data=cur_data, has_book=has_book, ogr_book=ogr_book, info=info, user=get_user(), user_full_name=get_user_full_name(), is_admin=is_admin())
+    return template('tpl/ogrenci.tpl', cur_data=cur_data, has_book=has_book, ogr_book=ogr_book, user=get_user(), user_full_name=get_user_full_name(), is_admin=is_admin())
 
 
 @app.post('/ogrenci/oduncver')
@@ -152,8 +151,51 @@ def logout():
     logout_user()
     redirect("/")
 
+@app.get('/odunctekiler')
+def admin_loan_book_list():
+    if is_admin() == False: return "KULLANICI HATASI"
+    
+    # Set Connection
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+    
+    # update record
+    c.execute("SELECT *  FROM odunc WHERE alan is null ORDER BY sinif, no")
+    cur_data = c.fetchall()
+    
+    counter = 1
+    
+    return template('tpl/odunctekiler.tpl', counter=counter, cur_data=cur_data, user=get_user(), user_full_name=get_user_full_name(), is_admin=is_admin())
+    
+@app.get('/odunctekiler/csv')
+def admin_loan_book_list_csv():
+    if is_admin() == False: return "KULLANICI HATASI"
+    
+    # Set Connection
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+    
+    # update record
+    c.execute("SELECT *  FROM odunc WHERE alan is null ORDER BY sinif, no")
+    cur_data = c.fetchall()
+    
+    from io import StringIO
+    out = StringIO()
+    csv_writer = csv.writer(out, delimiter=',')
+    
+    for row in cur_data:
+        csv_writer.writerow([row[1], row[2], row[3], row[8]])
+    
+    response.headers['Content-type'] = 'text/csv'
+    response.headers['Content-Disposition'] = 'attachment; filename="liste.csv"'
+    
+    return out.getvalue()
+
+
 @app.get('/update_users')
 def admin_update_users():
+    if is_admin() == False: return "KULLANICI HATASI"
+    
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
     c.execute("delete from ogrenci where 1=1")
