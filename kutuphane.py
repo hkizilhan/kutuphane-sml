@@ -90,7 +90,7 @@ def index():
 
 @app.post('/ogrenci')
 def ogrenci():
-    if get_user() == False: return "KULLANICI HATASI"
+    if get_user() == False: return redirect("/")
         
     ogrenci_no = request.forms.get("ogr_no")
         
@@ -117,7 +117,7 @@ def ogrenci():
 
 @app.post('/ogrenci/oduncver')
 def oduncver():
-    if get_user() == False: return "KULLANICI HATASI"
+    if get_user() == False: return redirect("/")
     
     ogrenci_no = request.forms.get("ogr_no")
     ogrenci_sinif = request.forms.get("ogr_sinif")
@@ -138,7 +138,7 @@ def oduncver():
 
 @app.post('/iade')
 def iade():
-    if get_user() == False: return "KULLANICI HATASI"
+    if get_user() == False: return redirect("/")
 
     odunc_id = request.forms.get("odunc_id")
     
@@ -160,7 +160,7 @@ def logout():
 
 @app.get('/odunctekiler')
 def admin_loan_book_list():
-    if is_admin() == False: return "KULLANICI HATASI"
+    if is_admin() == False: return redirect("/")
     
     # Set Connection
     conn = sqlite3.connect(DB_FILE)
@@ -176,7 +176,7 @@ def admin_loan_book_list():
     
 @app.get('/odunctekiler/csv')
 def admin_loan_book_list_csv():
-    if is_admin() == False: return "KULLANICI HATASI"
+    if is_admin() == False: return redirect("/")
     
     # Set Connection
     conn = sqlite3.connect(DB_FILE)
@@ -201,7 +201,7 @@ def admin_loan_book_list_csv():
 
 @app.get('/update_users')
 def admin_update_users():
-    if is_admin() == False: return "KULLANICI HATASI"
+    if is_admin() == False: return redirect("/")
     
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
