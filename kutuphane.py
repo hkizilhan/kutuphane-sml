@@ -13,6 +13,7 @@ DB_FILE = 'db.sqlite'
 CSV_FILE = 'db.csv'
 ADMIN = 'hakan'
 SECRET = 'secret key of hakan'
+COOKIE_TIMEOUT = 900
 
 ALERT_HTML = """<html lang="tr">
               <head><link rel="stylesheet" href="/static/bootstrap.min.css"></head>
@@ -31,13 +32,19 @@ def check_user(username, password):
     return success  #False, no login        
 
 def login_user(username, password):
-    response.set_cookie("logged_user", username, secret=SECRET)
+    response.set_cookie("logged_user", username, secret=SECRET, max_age=COOKIE_TIMEOUT)
     
 def logout_user():
     response.delete_cookie("logged_user")
     
 def get_user():
-    return request.get_cookie("logged_user", False, secret=SECRET)
+    user_name = request.get_cookie("logged_user", False, secret=SECRET) 
+    
+    if user_name == False: return False
+    else:
+        response.set_cookie("logged_user", user_name, secret=SECRET, max_age=COOKIE_TIMEOUT)
+            
+    return user_name
     
 def get_user_full_name():
     username = request.get_cookie("logged_user", False, secret=SECRET)
@@ -184,7 +191,7 @@ def admin_loan_book_list_csv():
     csv_writer = csv.writer(out, delimiter=',')
     
     for row in cur_data:
-        csv_writer.writerow([row[1], row[2], row[3], row[8]])
+        csv_writer.writerow([row[1], row[2], row[3], row[8], row[5].split(".", 1)[0], row[4] ])
     
     response.headers['Content-type'] = 'text/csv'
     response.headers['Content-Disposition'] = 'attachment; filename="liste.csv"'
