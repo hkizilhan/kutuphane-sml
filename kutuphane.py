@@ -99,7 +99,7 @@ def ogrenci():
     c = conn.cursor()
     
     # get student user name
-    c.execute("select * from ogrenci where no=?", (ogrenci_no,) )
+    c.execute("SELECT * FROM ogrenci WHERE no=?", (ogrenci_no,) )
     cur_data = c.fetchone()
     
     # no student, stop
@@ -107,7 +107,7 @@ def ogrenci():
         return ALERT_HTML.format("alert-danger", "ÖĞRENCİ NUMARASI YANLIŞ!")
                 
     # get student books
-    c.execute("select * from odunc where no=? AND alan is NULL", (ogrenci_no,) )
+    c.execute("SELECT * FROM odunc WHERE no=? AND teslim_alan is NULL", (ogrenci_no,) )
     ogr_book = c.fetchone()
     
     has_book = not (ogr_book == None)
@@ -130,7 +130,7 @@ def oduncver():
     c = conn.cursor()
     
     # insert record
-    c.execute("INSERT INTO odunc (no, sinif, adsoyad, veren, verme_tarihi, kitap) VALUES(?, ?, ?, ?, ?, ?)", (ogrenci_no, ogrenci_sinif, ogrenci_adsoyad, get_user_full_name(), datetime.now(), kitap) )
+    c.execute("INSERT INTO odunc (no, sinif, adsoyad, odunc_veren, odunc_verme_tarihi, kitap) VALUES(?, ?, ?, ?, ?, ?)", (ogrenci_no, ogrenci_sinif, ogrenci_adsoyad, get_user_full_name(), datetime.now(), kitap) )
     conn.commit()
     
     return ALERT_HTML.format("alert-success", "KİTAP ÖDÜNÇ VERİLDİ.")
@@ -147,7 +147,7 @@ def iade():
     c = conn.cursor()
     
     # update record
-    c.execute("UPDATE odunc SET alan=?, alma_tarihi=? WHERE id=?", (get_user_full_name(), datetime.now(), odunc_id))
+    c.execute("UPDATE odunc SET teslim_alan=?, teslim_alma_tarihi=? WHERE id=?", (get_user_full_name(), datetime.now(), odunc_id))
     cur_data = c.fetchone()
     conn.commit()
 
@@ -167,7 +167,7 @@ def admin_loan_book_list():
     c = conn.cursor()
     
     # update record
-    c.execute("SELECT *  FROM odunc WHERE alan is null ORDER BY sinif, no")
+    c.execute("SELECT * FROM odunc WHERE teslim_alan is NULL ORDER BY sinif, no")
     cur_data = c.fetchall()
     
     counter = 1
@@ -183,7 +183,7 @@ def admin_loan_book_list_csv():
     c = conn.cursor()
     
     # update record
-    c.execute("SELECT *  FROM odunc WHERE alan is null ORDER BY sinif, no")
+    c.execute("SELECT * FROM odunc WHERE teslim_alan is NULL ORDER BY sinif, no")
     cur_data = c.fetchall()
     
     from io import StringIO
@@ -233,7 +233,7 @@ except IOError:
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
     c.execute('CREATE TABLE "ogrenci" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "no" INTEGER NOT NULL , "sinif" VARCHAR NOT NULL , "adsoyad" VARCHAR NOT NULL )')
-    c.execute('CREATE TABLE "odunc" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "no" INTEGER NOT NULL , "sinif" VARCHAR NOT NULL , "adsoyad" VARCHAR NOT NULL , "veren" VARCHAR NOT NULL , "verme_tarihi" DATETIME NOT NULL , "alan" VARCHAR, "alma_tarihi" DATETIME, "kitap" VARCHAR NOT NULL )')
+    c.execute('CREATE TABLE "odunc"   ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "no" INTEGER NOT NULL , "sinif" VARCHAR NOT NULL , "adsoyad" VARCHAR NOT NULL , "odunc_veren" VARCHAR NOT NULL , "odunc_verme_tarihi" DATETIME NOT NULL , "teslim_alan" VARCHAR, "teslim_alma_tarihi" DATETIME, "kitap" VARCHAR NOT NULL )')
     conn.commit()
     
 
