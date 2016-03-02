@@ -207,7 +207,7 @@ def admin_update_users():
     c = conn.cursor()
     c.execute("delete from ogrenci where 1=1")
     
-    with open(CSV_FILE, encoding="utf-8") as csvfile:
+    with open(CSV_FILE) as csvfile: # ,encoding="utf-8"
         readCSV = csv.reader(csvfile, delimiter=',')
         for row in readCSV:
             c.execute("INSERT INTO ogrenci (no, sinif, adsoyad) VALUES (?,?,?)", (row[0], row[1] ,row[2])  )
@@ -219,6 +219,10 @@ def admin_update_users():
 @app.route('/static/<filename>')
 def server_static(filename):
     return static_file(filename, root='./static')
+    
+@app.route('/static/eokul/<filename>')
+def server_static(filename):
+    return static_file(filename, root='./static/eokul')
 
 
 # Set db file if not exist
@@ -233,7 +237,7 @@ except IOError:
     conn.commit()
     
 
-run(app, host='0.0.0.0', port=8080, reloader=True)
+run(app, host='0.0.0.0', port=8080, reloader=True, debug=True)
 
 
 

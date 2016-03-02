@@ -13,6 +13,7 @@
     <h3 class="panel-title">ÖĞRENCİ BİLGİSİ</h3>
   </div>
   <div class="panel-body">
+    <img src="/static/eokul/{{ cur_data[1] }}.jpg" alt="">
     {{ cur_data[2] }} &nbsp;&nbsp;&nbsp; {{ cur_data[1] }} &nbsp;&nbsp;&nbsp; {{ cur_data[3] }}
   </div>
 </div>
