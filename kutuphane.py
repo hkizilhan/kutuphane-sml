@@ -13,7 +13,7 @@ DB_FILE = 'db.sqlite'
 CSV_FILE = 'db.csv'
 ADMIN = 'hakan'
 SECRET = 'secret key of hakan'
-COOKIE_TIMEOUT = 900
+COOKIE_TIMEOUT = None
 
 ALERT_HTML = """<html lang="tr">
               <head><link rel="stylesheet" href="/static/bootstrap.min.css"></head>

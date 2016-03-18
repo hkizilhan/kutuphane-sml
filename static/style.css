@@ -1,0 +1,6 @@
+
+.dropdown-menu > li > a:focus, .dropdown-menu > li > a:hover {
+	color: #FFFDFD;
+	text-decoration: none;
+	background-color: #337ab7;
+}
