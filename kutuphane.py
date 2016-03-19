@@ -129,6 +129,14 @@ def oduncver():
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
     
+    # get student books
+    c.execute("SELECT * FROM odunc WHERE no=? AND teslim_alan is NULL", (ogrenci_no,) )
+    ogr_book = c.fetchone()
+    
+    if (ogr_book != None):
+        return ALERT_HTML.format("alert-danger", "ÖĞRENCİDE ZATEN BİR KİTAP VAR!")
+    
+    
     # insert record
     c.execute("INSERT INTO odunc (no, sinif, adsoyad, odunc_veren, odunc_verme_tarihi, kitap) VALUES(?, ?, ?, ?, ?, ?)", (ogrenci_no, ogrenci_sinif, ogrenci_adsoyad, get_user_full_name(), datetime.now(), kitap) )
     conn.commit()
