@@ -1,6 +1,6 @@
 from bottle import Bottle, run, template, request, response, redirect, static_file
 from datetime import datetime
-import sqlite3, csv
+import sqlite3, csv, os
 
 users = (('hakan', 'hakan', 'Md. Yrd. Hakan'),
          ('deneme1', 'deneme1', 'DENEME 1'),
@@ -242,6 +242,12 @@ def server_static(filename):
     
 @app.route('/static/eokul/<filename>')
 def server_static(filename):
+    # format filename as 001.jpg
+    filename=filename.rjust(7, "0")
+    # check for extension case, .jpg or .JPG
+    if not os.path.isfile("./static/eokul/" + filename):
+        filename=filename.upper()
+
     return static_file(filename, root='./static/eokul')
 
 
