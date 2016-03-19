@@ -15,11 +15,14 @@ ADMIN = 'hakan'
 SECRET = 'secret key of hakan'
 COOKIE_TIMEOUT = None
 
-ALERT_HTML = """<html lang="tr">
+
+def alert_html(msg, alert_type="alert-success"):
+    ALERT_HTML = """<html lang="tr">
               <head><link rel="stylesheet" href="/static/bootstrap.min.css"></head>
               <body><div class="alert {}" role="alert">{}</div>
-              &nbsp;&nbsp;&nbsp;&nbsp;<a href="/" class="btn btn-primary"> < GERİ DÖN</a></body></html>"""
-
+              <a href="/" class="btn btn-primary" style="margin-left: 20px"> < GERİ DÖN</a></body></html>"""
+    return ALERT_HTML.format(alert_type, msg)
+    
 
 def check_user(username, password):
     success = False
@@ -104,7 +107,7 @@ def ogrenci():
     
     # no student, stop
     if cur_data == None:
-        return ALERT_HTML.format("alert-danger", "ÖĞRENCİ NUMARASI YANLIŞ!")
+        return alert_html("ÖĞRENCİ NUMARASI YANLIŞ!", "alert-danger")
                 
     # get student books
     c.execute("SELECT * FROM odunc WHERE no=? AND teslim_alan is NULL", (ogrenci_no,) )
@@ -134,14 +137,14 @@ def oduncver():
     ogr_book = c.fetchone()
     
     if (ogr_book != None):
-        return ALERT_HTML.format("alert-danger", "ÖĞRENCİDE ZATEN BİR KİTAP VAR!")
+        return alert_html("ÖĞRENCİDE ZATEN BİR KİTAP VAR!", "alert-danger")
     
     
     # insert record
     c.execute("INSERT INTO odunc (no, sinif, adsoyad, odunc_veren, odunc_verme_tarihi, kitap) VALUES(?, ?, ?, ?, ?, ?)", (ogrenci_no, ogrenci_sinif, ogrenci_adsoyad, get_user_full_name(), datetime.now(), kitap) )
     conn.commit()
     
-    return ALERT_HTML.format("alert-success", "KİTAP ÖDÜNÇ VERİLDİ.")
+    return alert_html("KİTAP ÖDÜNÇ VERİLDİ.", "alert-success")
 
 
 @app.post('/iade')
@@ -159,7 +162,7 @@ def iade():
     cur_data = c.fetchone()
     conn.commit()
 
-    return ALERT_HTML.format("alert-success", "KİTAP İADE EDİLDİ.")
+    return alert_html("KİTAP İADE EDİLDİ.", "alert-success")
     
 @app.get('/logout')
 def logout():
@@ -221,7 +224,7 @@ def admin_update_users():
             c.execute("INSERT INTO ogrenci (no, sinif, adsoyad) VALUES (?,?,?)", (row[0], row[1] ,row[2])  )
     
     conn.commit()
-    return ALERT_HTML.format("alert-success", "KAYITLAR GÜNCELLENDİ...")
+    return alert_html("KAYITLAR GÜNCELLENDİ...", "alert-success")
     
 
 @app.route('/static/<filename>')
