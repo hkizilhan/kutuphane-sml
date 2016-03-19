@@ -16,6 +16,15 @@ SECRET = 'secret key of hakan'
 COOKIE_TIMEOUT = None
 
 
+def upper_tr(in_str):
+    upper_map = {
+        ord('ı'): 'I',
+        ord('i'): 'İ',}
+    
+    in_str = in_str.translate(upper_map).upper()
+    return in_str
+
+
 def alert_html(msg, alert_type="alert-success"):
     ALERT_HTML = """<html lang="tr">
               <head><link rel="stylesheet" href="/static/bootstrap.min.css"></head>
@@ -141,7 +150,7 @@ def oduncver():
     
     
     # insert record
-    c.execute("INSERT INTO odunc (no, sinif, adsoyad, odunc_veren, odunc_verme_tarihi, kitap) VALUES(?, ?, ?, ?, ?, ?)", (ogrenci_no, ogrenci_sinif, ogrenci_adsoyad, get_user_full_name(), datetime.now(), kitap) )
+    c.execute("INSERT INTO odunc (no, sinif, adsoyad, odunc_veren, odunc_verme_tarihi, kitap) VALUES(?, ?, ?, ?, ?, ?)", (ogrenci_no, ogrenci_sinif, ogrenci_adsoyad, get_user_full_name(), datetime.now(), upper_tr(kitap) ))
     conn.commit()
     
     return alert_html("KİTAP ÖDÜNÇ VERİLDİ.", "alert-success")
