@@ -1,6 +1,7 @@
 from bottle import Bottle, run, template, request, response, redirect, static_file
 from datetime import datetime
-import sqlite3, csv, os
+import sqlite3, os, csv
+import xlrd
 
 users = (('hakan', 'hakan', 'Md. Yrd. Hakan'),
          ('deneme1', 'deneme1', 'DENEME 1'),
@@ -9,8 +10,9 @@ users = (('hakan', 'hakan', 'Md. Yrd. Hakan'),
          ('deneme4', 'deneme4', 'DENEME 4')
             )
 
+VERSION = 0.01
 DB_FILE = 'db.sqlite'
-CSV_FILE = 'db.csv'
+XLS_FILE = 'liste.xls'
 ADMIN = 'hakan'
 SECRET = 'secret key of hakan'
 COOKIE_TIMEOUT = None
@@ -227,11 +229,20 @@ def admin_update_users():
     c = conn.cursor()
     c.execute("delete from ogrenci where 1=1")
     
-    with open(CSV_FILE) as csvfile: # ,encoding="utf-8"
-        readCSV = csv.reader(csvfile, delimiter=',')
-        for row in readCSV:
-            c.execute("INSERT INTO ogrenci (no, sinif, adsoyad) VALUES (?,?,?)", (row[0], row[1] ,row[2])  )
+    book = xlrd.open_workbook(filename=XLS_FILE)
+    sh = book.sheet_by_index(0)
     
+    for rx in range(sh.nrows):
+        no    = int( sh.cell_value(rowx=rx, colx=0) )
+        
+        sinif = str( sh.cell_value(rowx=rx, colx=1) )
+        sinif = sinif.replace("/","-")
+        
+        ad    = str( sh.cell_value(rowx=rx, colx=2) )
+        
+        c.execute("INSERT INTO ogrenci (no, sinif, adsoyad) VALUES (?,?,?)", (no, sinif ,ad)  )
+        
+            
     conn.commit()
     return alert_html("KAYITLAR GÜNCELLENDİ...", "alert-success")
     
