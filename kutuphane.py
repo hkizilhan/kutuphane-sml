@@ -3,17 +3,15 @@ from datetime import datetime
 import sqlite3, os, csv
 import xlrd
 
-users = (('hakan', 'hakan', 'Md. Yrd. Hakan'),
-         ('deneme1', 'deneme1', 'DENEME 1'),
-         ('deneme2', 'deneme2', 'DENEME 2'),
-         ('deneme3', 'deneme3', 'DENEME 3'),
-         ('deneme4', 'deneme4', 'DENEME 4')
-            )
+users = list()
+# ('hakan', 'hakan', 'Md. Yrd. Hakan'),
 
-VERSION = 0.01
+
+VERSION = 0.02
 DB_FILE = 'db.sqlite'
 XLS_FILE = 'liste.xls'
-ADMIN = 'hakan'
+USERS_FILE = 'users.xls'
+ADMIN = 'admin'
 SECRET = 'secret key of hakan'
 COOKIE_TIMEOUT = None
 
@@ -272,6 +270,35 @@ except IOError:
     c.execute('CREATE TABLE "ogrenci" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "no" INTEGER NOT NULL , "sinif" VARCHAR NOT NULL , "adsoyad" VARCHAR NOT NULL )')
     c.execute('CREATE TABLE "odunc"   ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "no" INTEGER NOT NULL , "sinif" VARCHAR NOT NULL , "adsoyad" VARCHAR NOT NULL , "odunc_veren" VARCHAR NOT NULL , "odunc_verme_tarihi" DATETIME NOT NULL , "teslim_alan" VARCHAR, "teslim_alma_tarihi" DATETIME, "kitap" VARCHAR NOT NULL )')
     conn.commit()
+    
+
+
+
+# Load Users
+users_xls = xlrd.open_workbook(filename=USERS_FILE)
+users_sh  = users_xls.sheet_by_index(0)
+    
+for rx in range(users_sh.nrows):
+    
+    cell = users_sh.cell(rx, 0)
+    if cell.ctype == xlrd.XL_CELL_NUMBER:
+        user_name = str(int(cell.value))
+    else:
+        user_name = str(cell.value)
+    
+    cell = users_sh.cell(rx, 1)
+    if cell.ctype == xlrd.XL_CELL_NUMBER:
+        password = str(int(cell.value))
+    else:
+        password = str(cell.value)
+    
+    cell = users_sh.cell(rx, 2)
+    if cell.ctype == xlrd.XL_CELL_NUMBER:
+        adsoyad = str(int(cell.value))
+    else:
+        adsoyad = str(cell.value)
+    
+    users.append([user_name, password, adsoyad])
     
 
 run(app, host='0.0.0.0', port=8080, reloader=True, debug=True)
