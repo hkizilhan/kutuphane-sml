@@ -7,7 +7,7 @@ users = list()
 # ('hakan', 'hakan', 'Md. Yrd. Hakan'),
 
 
-VERSION = 0.02
+VERSION = 0.03
 DB_FILE = 'db.sqlite'
 XLS_FILE = 'liste.xls'
 USERS_FILE = 'users.xls'
@@ -252,7 +252,7 @@ def server_static(filename):
 @app.route('/static/eokul/<filename>')
 def server_static(filename):
     # format filename as 001.jpg
-    filename=filename.rjust(7, "0")
+    # filename=filename.rjust(7, "0")
     # check for extension case, .jpg or .JPG
     if not os.path.isfile("./static/eokul/" + filename):
         filename=filename.upper()
